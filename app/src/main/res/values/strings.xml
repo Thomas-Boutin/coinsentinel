@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">coinsentinel</string>
+    <string name="app_name">CoinSentinel</string>
+    <string name="coin_header">%1$s (%2$s)</string>
+    <string name="coin_rank">Rang %1$d</string>
+    <string name="coin_price">%1$s USD</string>
 </resources>
