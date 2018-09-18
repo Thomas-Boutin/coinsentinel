@@ -1,4 +1,4 @@
-package fr.ippon.androidaacsample.coinsentinel.util
+package fr.ippon.androidaacsample.coinsentinel.repository
 
 enum class Status {
     SUCCESS,

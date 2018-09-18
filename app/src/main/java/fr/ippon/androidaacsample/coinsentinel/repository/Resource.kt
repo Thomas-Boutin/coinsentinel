@@ -1,4 +1,4 @@
-package fr.ippon.androidaacsample.coinsentinel.util
+package fr.ippon.androidaacsample.coinsentinel.repository
 
 class Resource<T> private constructor(val status: Status, val data: T?, val throwable: Throwable?) {
     companion object {

@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.AndroidInjection
 import fr.ippon.androidaacsample.coinsentinel.R
 import fr.ippon.androidaacsample.coinsentinel.db.Coin
-import fr.ippon.androidaacsample.coinsentinel.util.Resource
-import fr.ippon.androidaacsample.coinsentinel.util.Status
+import fr.ippon.androidaacsample.coinsentinel.repository.Resource
+import fr.ippon.androidaacsample.coinsentinel.repository.Status
 import fr.ippon.androidaacsample.coinsentinel.vm.CoinViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -24,9 +24,10 @@ class MainActivity : AppCompatActivity() {
     private val coins: MutableList<Coin> = mutableListOf()
 
     private val updateCoins = Observer<Resource<Array<Coin>>> { it ->
+        refreshCoinsList(it.data ?: emptyArray())
+
         when (it.status) {
             Status.SUCCESS -> {
-                refreshCoinsList(it.data ?: emptyArray())
                 this@MainActivity.swipe_refresh.isRefreshing = false
             }
             Status.ERROR -> {
