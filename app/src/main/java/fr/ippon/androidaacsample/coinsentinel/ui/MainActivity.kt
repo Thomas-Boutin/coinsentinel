@@ -4,33 +4,38 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import awaitObjectResult
-import com.github.kittinunf.fuel.Fuel
 import dagger.android.AndroidInjection
 import fr.ippon.androidaacsample.coinsentinel.R
-import fr.ippon.androidaacsample.coinsentinel.api.CoinResultDeserializer
-import fr.ippon.androidaacsample.coinsentinel.api.CoinRouting
 import fr.ippon.androidaacsample.coinsentinel.db.Coin
 import fr.ippon.androidaacsample.coinsentinel.util.Resource
 import fr.ippon.androidaacsample.coinsentinel.util.Status
+import fr.ippon.androidaacsample.coinsentinel.vm.CoinViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.channels.produce
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
-
     @Inject
-    lateinit var coinResultDeserializer: CoinResultDeserializer
+    lateinit var coinViewModel: CoinViewModel
 
-    private val coins: MutableList<Coin> = mutableListOf()
     private lateinit var coinAdapter: CoinAdapter
+    private val coins: MutableList<Coin> = mutableListOf()
+
+    private val updateCoins = Observer<Resource<Array<Coin>>> { it ->
+        when (it.status) {
+            Status.SUCCESS -> {
+                refreshCoinsList(it.data ?: emptyArray())
+                this@MainActivity.swipe_refresh.isRefreshing = false
+            }
+            Status.ERROR -> {
+                Toast.makeText(this@MainActivity, it.throwable?.message, Toast.LENGTH_SHORT).show()
+                this@MainActivity.swipe_refresh.isRefreshing = false
+            }
+            Status.LOADING -> this@MainActivity.swipe_refresh.isRefreshing = true
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +47,9 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        this.fetchCoins()
+        this.coinViewModel.fetchCoins()
         this.swipe_refresh.setOnRefreshListener {
-            this.fetchCoins();
+            this.coinViewModel.fetchCoins()
         }
     }
 
@@ -53,39 +58,10 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
     }
 
-    private fun fetchCoins() = GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-        getCoins().consumeEach { it ->
-            when (it.status) {
-                Status.SUCCESS -> {
-                    updateCoins(it.data ?: emptyArray())
-                    this@MainActivity.swipe_refresh.isRefreshing = false
-                }
-                Status.ERROR -> {
-                    Toast.makeText(this@MainActivity, it.throwable?.message, Toast.LENGTH_SHORT).show()
-                    this@MainActivity.swipe_refresh.isRefreshing = false
-                }
-                Status.LOADING -> this@MainActivity.swipe_refresh.isRefreshing = true
-            }
-        }
-    }
-
-    private fun updateCoins(newCoins: Array<Coin>) {
+    private fun refreshCoinsList(newCoins: Array<Coin>) {
         coins.clear()
         coins.addAll(newCoins)
         coinAdapter.notifyDataSetChanged()
-    }
-
-    suspend private fun getCoins() = GlobalScope.produce(Dispatchers.Default, 0) {
-        val emptyData: Array<Coin> = emptyArray()
-        send(Resource.loading(emptyData))
-
-        Fuel.request(CoinRouting.GetCoins())
-            .awaitObjectResult(coinResultDeserializer)
-            .fold(success = { response ->
-                send(Resource.success(response.data))
-            }, failure = { error ->
-                send(Resource.error(error, emptyData))
-            })
     }
 
     private fun init() {
@@ -94,7 +70,6 @@ class MainActivity : AppCompatActivity() {
         coinAdapter = CoinAdapter(coins, this)
         this.recycler_view_coin.adapter = coinAdapter
         this.swipe_refresh.setColorSchemeColors(ContextCompat.getColor(this, R.color.colorAccent))
-        coinAdapter = CoinAdapter(coins, this)
-        this.recycler_view_coin.adapter = coinAdapter
+        this.coinViewModel.coins.observe(this, this.updateCoins)
     }
 }
