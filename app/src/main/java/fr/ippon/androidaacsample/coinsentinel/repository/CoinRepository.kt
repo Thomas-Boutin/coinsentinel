@@ -2,8 +2,8 @@ package fr.ippon.androidaacsample.coinsentinel.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import awaitObjectResult
 import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.coroutines.awaitObjectResult
 import fr.ippon.androidaacsample.coinsentinel.api.CoinResultDeserializer
 import fr.ippon.androidaacsample.coinsentinel.api.CoinRouting
 import fr.ippon.androidaacsample.coinsentinel.db.Coin
@@ -55,8 +55,6 @@ class CoinRepository @Inject constructor(
     }
 
     fun fetchCoins() = GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-        getCoins().consumeEach { it ->
-            _coins.value = it
-        }
+        getCoins().consumeEach { _coins.value = it }
     }
 }

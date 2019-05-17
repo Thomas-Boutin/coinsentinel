@@ -1,5 +1,6 @@
 package fr.ippon.androidaacsample.coinsentinel.api
 
+import com.github.kittinunf.fuel.core.HeaderValues
 import com.github.kittinunf.fuel.core.Method
 import com.github.kittinunf.fuel.util.FuelRouting
 import fr.ippon.androidaacsample.coinsentinel.BuildConfig
@@ -32,7 +33,7 @@ sealed class CoinRouting : FuelRouting {
             }
         }
 
-    override val headers: Map<String, String>?
+    override val headers: Map<String, HeaderValues>?
         get() {
             return null
         }
