@@ -14,13 +14,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class CoinRepository @Inject constructor(
-        private val coinDao: CoinDao,
-        private val coinResultDeserializer: CoinResultDeserializer
+class CoinRepository constructor(
+    private val coinDao: CoinDao,
+    private val coinResultDeserializer: CoinResultDeserializer
 ) {
     private val _coins = MediatorLiveData<Resource<Array<Coin>>>()
     val coins: LiveData<Resource<Array<Coin>>>
@@ -46,12 +43,12 @@ class CoinRepository @Inject constructor(
         send(Resource.loading(lastData))
 
         Fuel.request(CoinRouting.GetCoins())
-                .awaitObjectResult(coinResultDeserializer)
-                .fold(success = { response ->
-                    coinDao.insertAll(response.data)
-                }, failure = { error ->
-                    send(Resource.error(error, lastData))
-                })
+            .awaitObjectResult(coinResultDeserializer)
+            .fold(success = { response ->
+                coinDao.insertAll(response.data)
+            }, failure = { error ->
+                send(Resource.error(error, lastData))
+            })
     }
 
     fun fetchCoins() = GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {

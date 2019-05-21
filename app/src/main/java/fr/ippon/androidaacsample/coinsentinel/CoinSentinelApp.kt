@@ -3,27 +3,26 @@ package fr.ippon.androidaacsample.coinsentinel
 import android.app.Application
 import android.os.StrictMode
 import com.facebook.stetho.Stetho
-import dagger.android.HasActivityInjector
+import fr.ippon.androidaacsample.coinsentinel.di.appModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 import timber.log.Timber
-import android.app.Activity
-import dagger.android.DispatchingAndroidInjector
-import fr.ippon.androidaacsample.coinsentinel.di.DaggerAppComponent
-import javax.inject.Inject
 
-class CoinSentinelApp : Application(), HasActivityInjector {
-    @Inject
-    lateinit var dispatchingAndroidActivityInjector: DispatchingAndroidInjector<Activity>
-
+class CoinSentinelApp : Application() {
     override fun onCreate() {
         if (BuildConfig.DEBUG) {
             initializeDebugConfiguration()
         }
 
         super.onCreate()
-        DaggerAppComponent.builder()
-                .application(this)
-                .build()
-                .inject(this)
+        setUpDependencyInjection()
+    }
+
+    private fun setUpDependencyInjection() {
+        startKoin {
+            androidContext(this@CoinSentinelApp)
+            modules(appModule)
+        }
     }
 
     private fun initializeDebugConfiguration() {
@@ -41,9 +40,5 @@ class CoinSentinelApp : Application(), HasActivityInjector {
                 .penaltyLog()
                 .penaltyDeath()
                 .build())
-    }
-
-    override fun activityInjector(): DispatchingAndroidInjector<Activity> {
-        return dispatchingAndroidActivityInjector
     }
 }

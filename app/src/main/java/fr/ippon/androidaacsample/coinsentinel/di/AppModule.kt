@@ -1,48 +1,36 @@
 package fr.ippon.androidaacsample.coinsentinel.di
 
-import android.app.Application
 import androidx.room.Room
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import dagger.Module
-import dagger.Provides
 import fr.ippon.androidaacsample.coinsentinel.api.CoinResultDeserializer
 import fr.ippon.androidaacsample.coinsentinel.api.CoinTypeAdapter
 import fr.ippon.androidaacsample.coinsentinel.db.AppDatabase
 import fr.ippon.androidaacsample.coinsentinel.db.Coin
-import fr.ippon.androidaacsample.coinsentinel.db.CoinDao
+import fr.ippon.androidaacsample.coinsentinel.repository.CoinRepository
+import fr.ippon.androidaacsample.coinsentinel.vm.CoinViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 import java.lang.reflect.Modifier
-import javax.inject.Singleton
 
+private const val DATABASE_NAME = "COIN_DB"
 
-@Module
-class AppModule {
-    private val DATABASE_NAME = "COIN_DB"
-
-    @Singleton @Provides
-    fun provideGson(): Gson {
-        return GsonBuilder()
-                .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.STATIC)
-                .serializeNulls()
-                .registerTypeAdapter(Coin::class.java, CoinTypeAdapter())
-                .excludeFieldsWithoutExposeAnnotation()
-                .create()
+val appModule = module {
+    single {
+        GsonBuilder()
+            .excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.STATIC)
+            .serializeNulls()
+            .registerTypeAdapter(Coin::class.java, CoinTypeAdapter())
+            .excludeFieldsWithoutExposeAnnotation()
+            .create()
     }
-
-    @Singleton @Provides
-    fun provideCoinResultDeserializer(gson: Gson): CoinResultDeserializer {
-        return CoinResultDeserializer(gson)
+    single { CoinResultDeserializer(get()) }
+    single {
+        Room.databaseBuilder(get(), AppDatabase::class.java, DATABASE_NAME)
+            .build()
     }
-
-    @Singleton
-    @Provides
-    fun provideDb(app: Application): AppDatabase {
-        return Room.databaseBuilder(app, AppDatabase::class.java, DATABASE_NAME).build()
+    single {
+        get<AppDatabase>().coinDao()
     }
-
-    @Singleton
-    @Provides
-    fun provideCoinDao(db: AppDatabase): CoinDao {
-        return db.coinDao()
-    }
+    single { CoinRepository(get(), get()) }
+    viewModel { CoinViewModel(get()) }
 }
