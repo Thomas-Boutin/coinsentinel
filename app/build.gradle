@@ -31,13 +31,13 @@ android {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     // Core Android libraries
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
 
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
@@ -68,7 +68,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$lifecycle_version"
 
     // Koin
-    def koin_version = '2.0.0-GA6'
+    def koin_version = '2.0.1'
     // Koin for Kotlin
     implementation "org.koin:koin-core:$koin_version"
     // Koin for Unit tests
