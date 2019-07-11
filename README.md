@@ -18,7 +18,7 @@ Android Studio with Kotlin 1.3 or above
 
 * [Kotlin](https://kotlinlang.org/) - The language used
 * [Timber](https://github.com/JakeWharton/timber) - Logging
-* [Dagger](https://google.github.io/dagger/) - Dependency Management
+* (~~[Dagger](https://google.github.io/dagger/)~~) [Koin](https://github.com/InsertKoinIO/koin) - Dependency Management
 * [Stetho](https://github.com/facebook/stetho) - Database inspection
 * [Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines) - Async management
 * [Fuel](https://github.com/kittinunf/Fuel) - Used to fetch data
