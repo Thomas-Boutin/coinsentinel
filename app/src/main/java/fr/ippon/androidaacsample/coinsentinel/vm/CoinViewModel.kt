@@ -9,7 +9,7 @@ import fr.ippon.androidaacsample.coinsentinel.repository.Resource
 class CoinViewModel constructor(
     private val coinRepository: CoinRepository
 ): ViewModel() {
-    var coins: LiveData<Resource<Array<Coin>>> = coinRepository.coins
+    val coins: LiveData<Resource<Array<Coin>>> = coinRepository.coins
 
     fun fetchCoins() {
         coinRepository.fetchCoins()
