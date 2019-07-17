@@ -8,10 +8,8 @@ import fr.ippon.androidaacsample.coinsentinel.api.CoinResultDeserializer
 import fr.ippon.androidaacsample.coinsentinel.api.CoinRouting
 import fr.ippon.androidaacsample.coinsentinel.db.Coin
 import fr.ippon.androidaacsample.coinsentinel.db.CoinDao
-import kotlinx.coroutines.CoroutineStart
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.channels.produce
 import kotlinx.coroutines.launch
 
@@ -38,7 +36,7 @@ class CoinRepository constructor(
         }
     }
 
-    private suspend fun getCoins() = GlobalScope.produce(Dispatchers.Default, 0) {
+    private fun CoroutineScope.getCoins() = produce {
         val lastData: Array<Coin> = coins.value?.data ?: emptyArray()
         send(Resource.loading(lastData))
 
@@ -51,7 +49,9 @@ class CoinRepository constructor(
             })
     }
 
-    fun fetchCoins() = GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-        getCoins().consumeEach { _coins.postValue(it) }
+    fun fetchCoins() = GlobalScope.launch {
+        for (coin in getCoins()) {
+            _coins.postValue(coin)
+        }
     }
 }
