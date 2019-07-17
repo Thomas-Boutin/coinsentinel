@@ -3,25 +3,35 @@ package fr.ippon.androidaacsample.coinsentinel
 import android.app.Application
 import android.os.StrictMode
 import com.facebook.stetho.Stetho
-import fr.ippon.androidaacsample.coinsentinel.di.appModule
+import fr.ippon.androidaacsample.coinsentinel.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
 
 class CoinSentinelApp : Application() {
     override fun onCreate() {
+        super.onCreate()
+
         if (BuildConfig.DEBUG) {
             initializeDebugConfiguration()
         }
 
-        super.onCreate()
         setUpDependencyInjection()
     }
 
     private fun setUpDependencyInjection() {
         startKoin {
             androidContext(this@CoinSentinelApp)
-            modules(appModule)
+            modules(
+                listOf(
+                    daoModule,
+                    databaseModule,
+                    deserializerModule,
+                    jsonModule,
+                    repositoryModule,
+                    viewModelModule
+                )
+            )
         }
     }
 
