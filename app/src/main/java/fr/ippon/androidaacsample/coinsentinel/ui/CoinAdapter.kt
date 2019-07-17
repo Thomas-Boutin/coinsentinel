@@ -14,8 +14,7 @@ import kotlinx.android.synthetic.main.coin_card_view.view.*
 class CoinAdapter(private val coins: List<Coin>, private val context: Context)
     : RecyclerView.Adapter<CoinAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int): CoinAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.coin_card_view, parent, false)
 
@@ -34,12 +33,10 @@ class CoinAdapter(private val coins: List<Coin>, private val context: Context)
             coinName,
             coinCode
         )
-
         holder.coinRank.text = context.getString(
             R.string.coin_rank,
             coinRank
         )
-
         holder.coinPrice.text = context.getString(
             R.string.coin_price,
             coinPrice
