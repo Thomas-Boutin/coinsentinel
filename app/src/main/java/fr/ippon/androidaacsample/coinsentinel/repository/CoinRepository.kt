@@ -31,10 +31,10 @@ class CoinRepository constructor(
 
     private fun subscribeToDatabase() {
         val sourceDb = coinDao.getAll()
-        _coins.value = Resource.loading(emptyArray())
+        _coins.postValue(Resource.loading(emptyArray()))
 
         _coins.addSource(sourceDb) {
-            _coins.value = Resource.success(it)
+            _coins.postValue(Resource.success(it))
         }
     }
 
@@ -52,6 +52,6 @@ class CoinRepository constructor(
     }
 
     fun fetchCoins() = GlobalScope.launch(Dispatchers.Main, CoroutineStart.DEFAULT) {
-        getCoins().consumeEach { _coins.value = it }
+        getCoins().consumeEach { _coins.postValue(it) }
     }
 }
