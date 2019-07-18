@@ -9,13 +9,13 @@ import java.lang.reflect.Type
 
 class CoinTypeAdapter : JsonDeserializer<Coin> {
     companion object {
-        val ID = "id"
-        val NAME = "name"
-        val SYMBOL = "symbol"
-        val RANK = "rank"
-        val QUOTES = "quotes"
-        val USD = "USD"
-        val PRICE = "price"
+        const val ID = "id"
+        const val NAME = "name"
+        const val SYMBOL = "symbol"
+        const val RANK = "rank"
+        const val QUOTES = "quotes"
+        const val USD = "USD"
+        const val PRICE = "price"
     }
 
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Coin {
