@@ -1,0 +1,48 @@
+ext {
+    final def androidx_appcompat_version = '1.1.0-rc01'
+    final def androidx_constraintlayout_version = '2.0.0-beta2'
+    final def androidx_espresso_version = '3.2.0'
+    final def androidx_junit_version = '1.1.1'
+    final def androidx_test_runner_version = '1.2.0'
+    final def cardview_version = '1.0.0'
+    final def coroutines_version = '1.2.1'
+    final def fuel_version = "2.0.1"
+    final def koin_version = '2.0.1'
+    final def lifecycle_version = '2.0.0'
+    final def recyclerview_version = '1.0.0'
+    final def roboelectric_version = '4.3'
+    final def stetho_version = '1.5.0'
+    final def timber_version = '4.7.1'
+
+    coreDependencies = [
+            appcompat               : "androidx.appcompat:appcompat:$androidx_appcompat_version",
+            cardView                : "androidx.cardview:cardview:$cardview_version",
+            constraintLayout        : "androidx.constraintlayout:constraintlayout:$androidx_constraintlayout_version",
+            coroutines              : "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version",
+            fuelAndroid             : "com.github.kittinunf.fuel:fuel-android:$fuel_version",
+            fuelCoroutines          : "com.github.kittinunf.fuel:fuel-coroutines:$fuel_version",
+            fuelGson                : "com.github.kittinunf.fuel:fuel-gson:$fuel_version",
+            koinCore                : "org.koin:koin-core:$koin_version",
+            koinAndroidXScope       : "org.koin:koin-androidx-scope:$koin_version",
+            koinAndroidXViewModel   : "org.koin:koin-androidx-viewmodel:$koin_version",
+            kotlinStdLib            : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
+            lifecycleExtensions     : "androidx.lifecycle:lifecycle-extensions:$lifecycle_version",
+            recyclerView            : "androidx.recyclerview:recyclerview:$recyclerview_version",
+            roomRuntime             : "androidx.room:room-runtime:$lifecycle_version",
+            stetho                  : "com.facebook.stetho:stetho:$stetho_version",
+            timber                  : "com.jakewharton.timber:timber:$timber_version",
+    ]
+
+    kaptDependencies = [
+            lifecycleCompiler       : "androidx.lifecycle:lifecycle-compiler:$lifecycle_version",
+            roomCompiler            : "androidx.room:room-compiler:$lifecycle_version"
+    ]
+
+    testDependencies = [
+            androidXJunit           : "androidx.test.ext:junit:$androidx_junit_version",
+            androidXTestRunner      : "androidx.test:runner:$androidx_test_runner_version",
+            espresso                : "androidx.test.espresso:espresso-core:$androidx_espresso_version",
+            koinTest                : "org.koin:koin-test:$koin_version",
+            roboelectric            : "org.robolectric:robolectric:$roboelectric_version",
+    ]
+}
